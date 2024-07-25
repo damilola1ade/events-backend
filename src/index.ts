@@ -1,4 +1,4 @@
-import express, { Express } from "express";
+import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import rootRouter from "./routes";
@@ -6,15 +6,13 @@ import { PrismaClient } from "@prisma/client";
 
 dotenv.config();
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT ? parseInt(process.env.PORT) : 3000;
 
-const app: Express = express();
+const HOST = process.env.HOST || "0.0.0.0";
 
-app.use(
-  cors({
-    credentials: true,
-  })
-);
+const app = express();
+
+app.use(cors({ credentials: true }));
 
 app.use(express.json());
 
@@ -24,6 +22,6 @@ export const prismaClient = new PrismaClient({
   log: ["query"],
 });
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+app.listen(PORT, HOST, () => {
+  console.log(`Server running at http://${HOST}:${PORT}`);
 });
