@@ -45,13 +45,7 @@ export const signup = async (req: Request, res: Response) => {
       },
     });
 
-    const accessToken = jwt.sign({ user }, process.env.JWT_SECRET as string, {
-      expiresIn: "30m",
-    });
-
-    res
-      .status(201)
-      .json({ user, accessToken, message: "Registration successful!" });
+    res.status(201).json({ user, message: "Registration successful!" });
   } catch (err) {
     console.error("Error during user creation:", err);
     res.status(500).json({ error: true, message: "Internal server error" });
@@ -88,6 +82,7 @@ export const login = async (req: Request, res: Response) => {
           expiresIn: "5h",
         }
       );
+
       res.json({
         user,
         accessToken,
@@ -107,6 +102,10 @@ export const logout = (req: Request, res: Response) => {
   const { accessToken } = req.body;
   if (accessToken) {
     tokenBlacklist.add(accessToken);
+    console.log("Token added to blacklist:", accessToken);
     res.status(200).json({ message: "Logged out successfully" });
+  } else {
+    console.error("No access token provided");
+    res.status(400).json({ message: "No access token provided" });
   }
 };
