@@ -105,7 +105,7 @@ export const getSingleEvent = async (req: Request, res: Response) => {
       where: { id: eventId },
     });
 
-    if (!event || event.userId !== userId) {
+    if (!event) {
       return res.status(404).json({
         error: true,
         message: "Event not found or you don't have permission to access it.",
